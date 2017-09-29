@@ -15,7 +15,7 @@ public class DataGenerator2017 {
 	 */
 
 	// relative probabilities of each length up to maxLength; add up to 1500:
-	private static int [] ranges = {10, 40, 100, 180, 250, 250, 200, 100, 80, 70, 60, 50, 40, 30, 20, 10, 10};
+	private static int [] ranges = {10, 45, 100, 180, 250, 250, 200, 100, 80, 70, 60, 50, 40, 30, 20, 10, 5};
 	private static int maxLength = 17;
 	private static int [] thresholds;
 	private static Random rand = new Random();
