@@ -20,15 +20,22 @@ public class DataGenerator2017 {
 	private static int [] thresholds;
 	private static Random rand = new Random();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 
 		String filename = "nofile";
+		PrintWriter out = null;
 		
 		// Reading main args
 		
+		// if there is a file specified, open a PrintWriter
 		if (args.length >= 1) {
-			filename = args[0];
+			filename = args[0];			
+			out = new PrintWriter(filename);
 		}
+		
+		
+		
+		// add the command line arguments to take the number of elements
 
 		if (!validRanges()) {
 			throw new RuntimeException("Invalid ranges");
@@ -36,7 +43,11 @@ public class DataGenerator2017 {
 		
 		computeTresholds();
 		
-		generateData(10000);
+		generateData(10000, out);
+		
+		if (out != null) {
+			out.close();
+		}
 	
 	}
 	
@@ -60,7 +71,7 @@ public class DataGenerator2017 {
 	
 	// generate data and print it to a file:
 	
-	private static void generateData(int numElements) {
+	private static void generateData(int numElements, PrintWriter out) {
 		// numbers are generated digit-by-digit.
 		// An array to store the digits:
 		int[] digits = new int[maxLength];
@@ -82,10 +93,17 @@ public class DataGenerator2017 {
 			}
 			
 			// print the result:
-			for (int j = 0; j < length; ++j) {
-				System.out.print(digits[j]);
+			if (out == null) { // no file specified, so print to standard output
+				for (int j = 0; j < length; ++j) {
+					System.out.print(digits[j]);
+				}
+				System.out.println();
+			} else { // print to the print writer:
+				for (int j = 0; j < length; ++j) {
+					out.print(digits[j]);
+				}
+				out.println();
 			}
-			System.out.println();
 		}
 	}
 	
