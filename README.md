@@ -24,7 +24,7 @@ First the length is generated, according to the probabilities listed above. Then
 ## How do you need to sort the data 
 
 Given a number N, let P(N) be the product of the two smallest different prime factors of N, or the only prime factor of N
-if it only has one. For instance:
+if it only has one. P(1) = 1 by definition. For instance:
 
 * P(100) = 10 
 * P(8) = 2
@@ -41,6 +41,7 @@ For instance:
 
 * 10000 is smaller than 15 since P(10000) = 10, P(15) = 15, and P(10000) < P(15)
 * 20 is smaller than 100 since P(20) = P(100) = 10, and 20 < 100
+* 1 is smaller than 2 since P(1) = 1 and P(2) = 2 
 
 The file [Group0.java](src/Group0.java) provides a Comparator that implements this comparison and provides some tests. Please
 consult it as needed.

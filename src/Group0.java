@@ -169,6 +169,11 @@ public class Group0 {
 				System.out.println("fails on 292");
 				System.out.println(productOfPrimeFactors(292));
 			}
+			
+			if (productOfPrimeFactors(1) != 1) { // 8 * 7069 * 7901, so product = 2 * 7069 = 14138
+				System.out.println("fails on 292");
+				System.out.println(productOfPrimeFactors(292));
+			}
 		}
 	}
 
