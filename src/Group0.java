@@ -93,17 +93,20 @@ public class Group0 {
 			long product1 = productOfPrimeFactors(n);
 			long product2 = productOfPrimeFactors(m);
 			
+			int result = 0;
 			if (product1 < product2) {
-				return -1;
+				result = -1;
 			} else if (product1 > product2) {
-				return 1;
+				result = 1;
 			} else if (n < m) {
-				return -1;				
-			} else if (m > n) {
-				return 1;
-			} else {
-				return 0;
+				result = -1;				
+			} else if (n > m) {
+				result = 1;
 			}
+
+			System.out.println( " The result is: " + result);
+			
+			return result;	
 		}
 		
 		// Takes a long number and returns the product of its up to two 
