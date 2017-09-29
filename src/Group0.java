@@ -1,8 +1,14 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Scanner;
 
 public class Group0 {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 		// testing the comparator:
 		PrimesComparator.testPrimeFactors();
 		
@@ -15,6 +21,66 @@ public class Group0 {
 		String outFileName = args[1];
 		
 		// read as strings
+		String [] data = readData(inputFileName);
+		
+		String [] toSort = data.clone();
+		
+		System.out.println(toSort.length);
+		
+		String [] sorted = sort(toSort);
+		
+		//printArray(sorted, 100);
+		
+		toSort = data.clone();
+		
+		Thread.sleep(10); //to let other things finish before timing; adds stability of runs
+
+		long start = System.currentTimeMillis();
+		
+		sorted = sort(toSort);
+		
+		long end = System.currentTimeMillis();
+		
+		System.out.println(end - start);
+		
+		writeOutResult(sorted, outFileName);
+
+	}
+	
+	// YOUR SORTING METHOD GOES HERE. 
+	// You may call other methods and use other classes. 
+	// Note: you may change the return type of the method. 
+	// You would need to provide your own function that prints your sorted array to 
+	// a file in the exact same format that my program outputs
+	private static String[] sort(String[] toSort) {
+		Arrays.sort(toSort, new PrimesComparator());
+		return toSort;
+	}
+	
+	private static String[] readData(String inFile) throws FileNotFoundException {
+		ArrayList<String> input = new ArrayList<>();
+		Scanner in = new Scanner(new File(inFile));
+		
+		while(in.hasNext()) {
+			input.add(in.next());
+		}
+		
+		System.out.println(input.size());
+				
+		in.close();
+		
+		// the string array is passed just so that the correct type can be created
+		return input.toArray(new String[0]);
+	}
+	
+	private static void writeOutResult(String[] sorted, String outputFilename) throws FileNotFoundException {
+
+		PrintWriter out = new PrintWriter(outputFilename);
+		for (String n : sorted) {
+			out.println(n);
+		}
+		out.close();
+
 	}
 	
 	private static class PrimesComparator implements Comparator<String> {
@@ -24,7 +90,20 @@ public class Group0 {
 			long n = new Long(str1);
 			long m = new Long(str2);
 			
-			return 0;
+			long product1 = productOfPrimeFactors(n);
+			long product2 = productOfPrimeFactors(m);
+			
+			if (product1 < product2) {
+				return -1;
+			} else if (product1 > product2) {
+				return 1;
+			} else if (n < m) {
+				return -1;				
+			} else if (m > n) {
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 		
 		// Takes a long number and returns the product of its up to two 
@@ -53,9 +132,10 @@ public class Group0 {
 			} else if (prime2 == 1)	{ // if we have only one prime, the other one may be larger than the square root,
 									// but only if it's not a power of the other prime
 				long candidate = n / prime1;
-				if (candidate % prime1 != 0) {
-					prime2 = candidate; 
+				while (candidate % prime1 == 0) {
+					candidate = candidate / prime1; 
 				}
+				prime2 = candidate;
 			}		
 			
 			return prime1 * prime2;
@@ -87,6 +167,10 @@ public class Group0 {
 			if (productOfPrimeFactors(446817352) != 14138) { // 8 * 7069 * 7901, so product = 2 * 7069 = 14138
 				System.out.println("fails on 446817352");
 				System.out.println(productOfPrimeFactors(446817352));
+			}
+			if (productOfPrimeFactors(292) != 146) { // 8 * 7069 * 7901, so product = 2 * 7069 = 14138
+				System.out.println("fails on 292");
+				System.out.println(productOfPrimeFactors(292));
 			}
 		}
 	}

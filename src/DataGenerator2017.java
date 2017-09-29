@@ -14,9 +14,9 @@ public class DataGenerator2017 {
 	 *            Author: Elena Machkasova
 	 */
 
-	// relative probabilities of each length; add up to 1500
-	private static int [] ranges = {10, 40, 100, 180, 250, 250, 200, 100, 80, 70, 60, 50, 40, 30, 20, 10, 5, 5};
-	private static int maxLength = 18;
+	// relative probabilities of each length up to maxLength; add up to 1500:
+	private static int [] ranges = {10, 40, 100, 180, 250, 250, 200, 100, 80, 70, 60, 50, 40, 30, 20, 10, 10};
+	private static int maxLength = 17;
 	private static int [] thresholds;
 	private static Random rand = new Random();
 
@@ -32,10 +32,8 @@ public class DataGenerator2017 {
 			filename = args[0];			
 			out = new PrintWriter(filename);
 		}
-		
-		
-		
-		// add the command line arguments to take the number of elements
+				
+		// add the command line arguments to take the number of elements - maybe? 
 
 		if (!validRanges()) {
 			throw new RuntimeException("Invalid ranges");
@@ -43,7 +41,7 @@ public class DataGenerator2017 {
 		
 		computeTresholds();
 		
-		generateData(10000, out);
+		generateData(1000, out);
 		
 		if (out != null) {
 			out.close();
@@ -57,7 +55,6 @@ public class DataGenerator2017 {
 	private static int generateLength() {
 		
 		int r = rand.nextInt(1500);
-		System.out.println(r);
 		
 		// find the slot that it fits in:
 		for (int i = 0; i < thresholds.length - 1; ++i) { // checking until the second-to-last since the last is 1500
@@ -139,26 +136,5 @@ public class DataGenerator2017 {
 		//System.out.println(thresholds[thresholds.length - 1]);
 	}
 	
-	
-	private static void writeOutputStandardOut(int x1, int y1, int x2, int y2, int[][] points) {
-		System.out.println(x1 + " " + y1);
-		System.out.println(x2 + " " + y2);
-		for (int i = 0; i < points.length; ++i) {
-			System.out.print(points[i][0] + " ");
-			System.out.print(points[i][1] + " ");
-			System.out.println(points[i][2]);
-		}
-	}
-
-	private static void writeOutputFile(PrintWriter out, int x1, int y1, int x2, int y2, int[][] points) {
-		out.println(x1 + " " + y1);
-		out.println(x2 + " " + y2);
-		for (int i = 0; i < points.length; ++i) {
-			out.print(points[i][0] + " ");
-			out.print(points[i][1] + " ");
-			out.println(points[i][2]);
-		}
-		out.close();
-	}
 
 }
