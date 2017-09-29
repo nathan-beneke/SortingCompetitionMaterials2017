@@ -25,8 +25,6 @@ public class Group0 {
 		
 		String [] toSort = data.clone();
 		
-		System.out.println(toSort.length);
-		
 		String [] sorted = sort(toSort);
 		
 		//printArray(sorted, 100);
@@ -64,8 +62,6 @@ public class Group0 {
 		while(in.hasNext()) {
 			input.add(in.next());
 		}
-		
-		System.out.println(input.size());
 				
 		in.close();
 		
@@ -103,8 +99,6 @@ public class Group0 {
 			} else if (n > m) {
 				result = 1;
 			}
-
-			System.out.println( " The result is: " + result);
 			
 			return result;	
 		}

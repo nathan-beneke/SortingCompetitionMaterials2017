@@ -41,7 +41,7 @@ public class DataGenerator2017 {
 		
 		computeTresholds();
 		
-		generateData(10000, out);
+		generateData(1000, out);
 		
 		if (out != null) {
 			out.close();

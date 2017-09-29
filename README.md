@@ -8,10 +8,40 @@ The Sorting Competition is a multi-lab exercise on developing the fastest sortin
 
 ## The data
 
+Data for this sorting competition consists of posistive numbers of 17 decimal digits or less, passed to the sorting 
+method as an array of strings. 
 
+The length of the numbers is most likely to be 5 or 6 decimal digits (the probability of the length being 5 or 6 is 1/6 each). The probability of lengths decreases similar to a bell curve as the length gets smaller or larger than 5 or 6. More specifically, the chances of each length are as follows, out of 1500 total:
+```
+{10, 45, 100, 180, 250, 250, 200, 100, 80, 70, 60, 50, 40, 30, 20, 10, 5}
+``` 
+Here 10 out of 1500 is the probability of a single digit number, 45 out of 1500 is the probability of a two-digit number, etc.
+
+## How is the data generated
+
+First the length is generated, according to the probabilities listed above. Then the digits are generated, with the most significant digit chosen among non-zero digits (to make sure that the number does indeed have the correct length). More details are in the file [DataGenerator2017.java](src/DataGenerator2017.java).
 
 ## How do you need to sort the data 
 
-The points are sorted based on their distance to **the closer** of the two reference points. If the distance is smaller than the threshold `0.0000000001`, it is considered zero. If the two points being compared have the difference of their distances to the closest reference point within the treshold, they are considered to be at the equal distance. In this case the point with the smaller timestamp is considered smaller. 
+Given a number N, let P(N) be the product of the two smallest different prime factors of N, or the only prime factor of N
+if it only has one. For instance:
 
-## How is the data generated
+* P(100) = 10 
+* P(8) = 2
+* P(17) = 17
+* P(121) = 11
+
+The data is sorted by the following comparison:
+
+* If P(N1) < P(N2) then N1 is considered to be smaller than N2
+* If P(N1) > P(N2) then N1 is considered to be larger than N2
+* If P(N1) = P(N2) then N1 and N2 are compared as regular numbers
+
+For instance:
+
+* 10000 is smaller than 15 since P(10000) = 10, P(15) = 15, and P(10000) < P(15)
+* 20 is smaller than 100 since P(20) = P(100) = 10, and 20 < 100
+
+The file [Group0.java](src/Group0.java) provides a Comparator that implements this comparison and provides some tests. Please
+consult it as needed.
+
