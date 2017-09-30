@@ -70,5 +70,27 @@ Your program must print **the only value**, which is the **time** (as it current
 
 **Important:** if the sorting times may be too small to distinguish groups based on just one run of the sorting, so I may loop over the sorting section multiple times. If this is the case, I will let you know no later than a day after the preliminary competition and will modify `Group0` file accordingly.  
 
+## Dates:
 
+*Friday, Oct 6* in class (1pm) is the *preliminary* competition. Please send me all your materials no later than 10pm on Thursday, Oct 5. This is required for everyone in the class. Groups remain anonymous after this phase, but all the solutions (in bytecode) become available. 
 
+We may have a second preliminary competition some time the week of Oct 9. 
+
+*Thursday, Oct 19* in the lab (2pm) is the *final* competition. All source code is posted immediately after that. Those in class will have their names revealed, others may choose to remain anonymous (but the code will still be posted). 
+
+Note that there are several more parts of the Algorithms assignment, including presentations and a write-up. I will post the dates for those later. Obviously, these are only for students in the class. 
+
+### Scoring
+
+The programs are tested on a few (between 1 and 3) data sets. For each data set each group's program is run three times, the median value counts. The groups are ordered by their median score for each data file and assigned places, from 1 to N. 
+
+The final score is given by the sum of places for all data sets. If the sum of places is equal for two groups, the sum of median times for all the runs resolves the tie. So if one group was first for one data set and third for the other one (2 sets total being run), it scored better than a group that was third for the first data set and second for the other. However, if one group was first for the first set and third for the other one, and the second group was second in both, the sum of times determines which one of them won since the sum of places is the same (1 + 3 = 2 + 2). 
+
+If a program has a compilation or a runtime error, doesn't sort correctly, or prints anything other than the total time in milliseconds, it gets a penalty of 1000000ms for that run. 
+
+## System specs
+
+The language used is Java 8 (as installed in the CSci lab). It's ran on a single CPU core.  
+
+I will post a script for running this program (with a correctness check and all), but for now a couple of things to know: run your program out of `/tmp` directory to avoid overhead of communications with the file server, and pin your program to a single core, i.e. run it like this:
+``taskset -c 0 java GroupN``
