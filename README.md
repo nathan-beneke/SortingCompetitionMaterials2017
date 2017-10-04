@@ -55,7 +55,8 @@ The file [Group0.java](src/Group0.java) provides a template for the setup for yo
 
 The data reading, the array cloning, the warmup sorting, and writing out the output are all outside of the timed portion of the method, and thus do not affect the total time. 
 
-You may not use any global variables that depend on your data. You may, however, have global constants that are initialized to fixed values (no computation!) before the data is being read and stay the same throughout the run. These constants may be arrays of no more than 1000 longs or equivalent amount of memory. If in doubt, please discuss with me. 
+You may not use any global variables that depend on your data. You may, however, have global constants that are initialized to fixed values (no computation!) before the data is being read and stay the same throughout the run. These constants may be arrays of no more than 1000 `long`s or equivalent amount of memory. For instance, if you are storing an array of objects that contain two `long`s, you can only have 500 of them. We consider one `long` to be the same as two `int`s, so you can store an array of 2000 `int`s.  
+If in doubt about specific cases, please discuss with me. 
 
 The method in the [Group0.java](src/Group0.java) files that you may modify is the `sort` method. It must take the array of strings. The return type of the method can be what it is now, which is the same as the parameter type `String []`, or it can be a different array type. If you are sorting in-place, i.e. the sorted result is in the same array, then you can just return a reference to that array, as my prototype method does, or make your sorting method `void`. If you are returning a different type of an array, the following rules have to be followed:
 * Your `sort` method return type needs to be changed to whatever  array you are returning, and consequently the type of `sorted` array in `main` needs to be changed. 
