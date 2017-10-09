@@ -18,7 +18,7 @@ public class PrimeGenerator {
                 primes.add((long) k);
                 j++;
             }
-            k++;
+            k+=2;
         }
 
         return primes;

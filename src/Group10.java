@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -100,7 +99,9 @@ public class Group10 {
 		exchange(input, highIndex, ++gt);
 
 		quicksort(input, lowIndex, lt-1, comparator);
-		quicksort(input, lt+1, gt-1, comparator);
+		if(pivotCompare != 0){
+			quicksort(input, lt+1, gt-1, comparator);
+		}
 		quicksort(input, gt+1, highIndex, comparator);
 
 	}
@@ -139,9 +140,9 @@ public class Group10 {
 		static long[] knownPrimesLongs;
 
 		public PrimesComparator() {
-			knownPrimesLongs = new long[400001];
+			knownPrimesLongs = new long[200001];
 			int i = 0;
-			for (Long l : PrimeGenerator.listPrimes(400000)) {
+			for (Long l : PrimeGenerator.listPrimes(200000)) {
 				knownPrimesLongs[i] = l;
 				i++;
 			}
@@ -152,93 +153,135 @@ public class Group10 {
 			long n = new Long(str1);
 			long m = new Long(str2);
 
-			long product1 = productOfPrimeFactors(n);
-			long product2 = productOfPrimeFactors(m);
-
-			int result = 0;
-			if (product1 < product2) {
-				result = -1;
-			} else if (product1 > product2) {
-				result = 1;
-			} else if (n < m) {
-				result = -1;
-			} else if (n > m) {
-				result = 1;
+			long result = primeProductCompare(n, m);
+			
+			if(result < 0){
+				return -1;
+			}else if(result > 0){
+				return 1;
+			}else{
+				return 0;
 			}
-
-			return result;
 		}
 
-//		private static long primeProductLessThan(long n, long m) {
-//			long primeN1 = 1;
-//			long primeN2 = 1;
-//			long primeM1 = 1;
-//			long primeM2 = 1;
-//			long boundN = (long) Math.sqrt(n) + 1;
-//			long boundM = (long) Math.sqrt(m) + 1;
-//
-//			for (long l : knownPrimesLongs) {
-//				if (n % l == 0 && primeN1 == 1) {
-//					primeN1 = l;
-//
-//					int reps = 2;
-//					while (n % Math.pow(primeN1, reps) == 0) {
-//						reps++;
-//					}
-//					boundN = Math.max(boundN, n / (long) Math.pow(primeN1, reps - 1));
-//
-//				} else if (n % l == 0) {
-//					primeN2 = l;
-//				}
-//
-//				if (m % l == 0 && primeM1 == 1) {
-//					primeM1 = l;
-//
-//					int reps = 2;
-//					while (m % Math.pow(primeM1, reps) == 0) {
-//						reps++;
-//					}
-//					boundM = Math.max(boundM, m / (long) Math.pow(primeM1, reps - 1));
-//
-//				} else if (m % l == 0) {
-//					primeM2 = l;
-//				}
-//
-//				if (primeN2 != 1 && primeM1 == 1 && primeN2 * primeN1 < l) {
-//					return -1;
-//				} else if (primeM2 != 1 && primeN1 == 1 && primeM1 * primeM2 < l) {
+		private static long primeProductCompare(long n, long m) {
+			long primeN1 = 1;
+			long primeN2 = 1;
+			long primeM1 = 1;
+			long primeM2 = 1;
+			
+			//These are the bounds for the number's NEXT prime factor
+			long boundN = (long) Math.sqrt(n) + 1;
+			long boundM = (long) Math.sqrt(m) + 1;
+
+			for (int i = 0; i < knownPrimesLongs.length; i++) {
+				
+				//Find factors of n and m
+				if (primeN1 == 1 && n % knownPrimesLongs[i] == 0){
+					primeN1 = knownPrimesLongs[i];
+					
+					//boundN = findNewBound(primeN1, n, boundN);
+					
+				}else if (primeN1 != 1 && primeN2 == 1 && n % knownPrimesLongs[i] == 0){
+					primeN2 =knownPrimesLongs[i];
+					//boundN = 0;
+				}
+				
+				if (primeM1 == 1 && m % knownPrimesLongs[i] == 0){
+					primeM1 = knownPrimesLongs[i];
+					
+					boundN = findNewBound(primeM1, m, boundM);
+				} else if (primeM1 != 1 && primeM2 == 1 && m % knownPrimesLongs[i] == 0){
+					primeM2 = knownPrimesLongs[i];
+				}
+				
+				//If one number (say n) hasn't found its first prime factor yet, but the other (m) has, and the product
+				//of m's two primes is less thanknownPrimesLongs[i](the number we are checking right now) then there is no possibility 
+				//that the product of n's are less than the product of m's
+				if (primeN1 == 1 && primeM1 * primeM2 < knownPrimesLongs[i]){
+					return 1;
+				} else if (primeM1 == 1 && primeN1 * primeN2 < knownPrimesLongs[i]){
+					return -1;
+				}
+
+				
+				if(knownPrimesLongs[i] > boundN && knownPrimesLongs[i] > boundM){
+					break;
+				}
+			}
+			
+			for(long i = knownPrimesLongs[knownPrimesLongs.length - 1] + 2;
+					i < boundM || i < boundN;
+					i+=2){
+				//Find factors of n and m
+				if (primeN1 == 1 && n % i == 0){
+					primeN1 = i;
+
+					//boundN = findNewBound(primeN1, n, boundN);
+
+				}else if (primeN1 != 1 && primeN2 == 1 && n % i == 0){
+					primeN2 = i;
+					//boundN = 0;
+				}
+
+				if (primeM1 == 1 && m % i == 0){
+					primeM1 = i;
+
+					boundN = findNewBound(primeM1, m, boundM);
+				} else if (primeM1 != 1 && primeM2 == 1 && m % i == 0){
+					primeM2 = i;
+				}
+
+				//If one number (say n) hasn't found its first prime factor yet, but the other (m) has, and the product
+				//of m's two primes is less thanknownPrimesLongs[i](the number we are checking right now) then there is no possibility 
+				//that the product of n's are less than the product of m's
+//				if (primeN1 == 1 && primeM1 * primeM2 < i){
 //					return 1;
-//				} else if (l > boundM && l > boundN) {
-//					break;
+//				} else if (primeM1 == 1 && primeN1 * primeN2 < i){
+//					return -1;
 //				}
-//			}
-//
-//			for (long i = knownPrimesLongs[knownPrimesLongs.length - 1] + 2; i <= boundN; i += 2) {
-//				if ((n % i) == 0) { // the first found factor must be prime
-//					if (primeN1 == 1) {
-//						primeN1 = i;
-//					} else { // the second found factor is a prime or a power of the first one
-//						if (i % primeN1 != 0) { // now we know it's a prime
-//							primeN2 = i;
-//							break;
-//						}
-//					}
-//				}
-//			}
-//
-//			// if we didn't find any prime factors, the number itself must be prime
-//			if (primeN1 == 1 && primeN2 == 1) {
-//				primeN1 = n;
-//			} else if (primeN2 == 1) { // if we have only one prime, the other one may be larger than the square root,
-//				// but only if it's not a power of the other prime
-//				long candidate = n / primeN1;
-//				while (candidate % primeN1 == 0) {
-//					candidate = candidate / primeN1;
-//				}
-//				primeN2 = candidate;
-//			}
-//			return 0;
-//		}
+			}
+			
+			
+			//Must make result make sense if n or m is prime.
+			if(primeN1 == 1){
+				primeN1 = n;
+			}
+			if(primeM1 == 1){
+				primeM1 = m;
+			}
+			if (primeN2 == 1)	{ // if we have only one prime, the other one may be larger than the square root,
+				// but only if it's not a power of the other prime
+				long candidate = n / primeN1;
+				while (candidate % primeN1 == 0) {
+					candidate = candidate / primeN1;
+					//System.out.println("loop2");
+				}
+				primeN2 = candidate;
+			}
+			if (primeM2 == 1)	{ // if we have only one prime, the other one may be larger than the square root,
+				// but only if it's not a power of the other prime
+				long candidate = n / primeM1;
+				while (candidate % primeM1 == 0) {
+					candidate = candidate / primeM1;
+					//System.out.println("loop2");
+				}
+				primeM2 = candidate;
+			}
+			
+			return primeN1*primeN2 - primeM1*primeM2;
+		}
+		
+		private static long findNewBound(long firstFactor, long n, long currentBound){
+
+			int reps = 2;
+			while(n % Math.pow(firstFactor, reps) == 0){
+				reps++;
+			}
+			currentBound = Math.min(currentBound, n / (long) Math.pow(firstFactor, reps - 1));
+
+			return currentBound;
+		}
 
 
 			// Takes a long number and returns the product of its up to two 
