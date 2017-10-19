@@ -39,7 +39,7 @@ public class DataGenerator2017 {
 			throw new RuntimeException("Invalid ranges");
 		}
 		
-		computeTresholds();
+		computeThresholds();
 		
 		generateData(10000, out);
 		
@@ -122,7 +122,7 @@ public class DataGenerator2017 {
 		return (ranges.length == maxLength) && (sum == 1500);
 	}
 	
-	private static void computeTresholds() {
+	private static void computeThresholds() {
 		thresholds = new int[ranges.length];
 		
 		thresholds[0] = ranges[0];

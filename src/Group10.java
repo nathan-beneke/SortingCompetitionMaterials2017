@@ -155,6 +155,8 @@ public class Group10 {
 			long product1 = productOfPrimeFactors(n);
 			long product2 = productOfPrimeFactors(m);
 
+			long res = primeProductLessThan(n, m);
+
 			int result = 0;
 			if (product1 < product2) {
 				result = -1;
@@ -169,76 +171,131 @@ public class Group10 {
 			return result;
 		}
 
-//		private static long primeProductLessThan(long n, long m) {
-//			long primeN1 = 1;
-//			long primeN2 = 1;
-//			long primeM1 = 1;
-//			long primeM2 = 1;
-//			long boundN = (long) Math.sqrt(n) + 1;
-//			long boundM = (long) Math.sqrt(m) + 1;
-//
-//			for (long l : knownPrimesLongs) {
-//				if (n % l == 0 && primeN1 == 1) {
-//					primeN1 = l;
-//
+		//Returns the product of n's first 2 prime factors minus the product of m's first 2 prime factors
+		//If n or m only has one prime factor then that prime is used instead.
+		private static long primeProductLessThan(long n, long m) {
+			long primeN1 = 1;
+			long primeN2 = 1;
+			long primeM1 = 1;
+			long primeM2 = 1;
+			long boundN = (long) Math.sqrt(n) + 1;
+			long boundM = (long) Math.sqrt(m) + 1;
+
+			for (long l : knownPrimesLongs) {
+				if (n % l == 0 && primeN1 == 1) {
+					primeN1 = l;
+
+					//TODO 0 is a placeholder
+					primeN2 = findSecondPrimeFactor(n, primeN1, 0);
+					if (primeM1 == 1){
+						primeM1 = findFirstPrimeFactor(m, primeN1 * primeN2);
+						//TODO 0 is a placeholder
+						primeM2 = findSecondPrimeFactor(m, primeM1, 0);
+					}
+
 //					int reps = 2;
 //					while (n % Math.pow(primeN1, reps) == 0) {
 //						reps++;
 //					}
 //					boundN = Math.max(boundN, n / (long) Math.pow(primeN1, reps - 1));
-//
-//				} else if (n % l == 0) {
-//					primeN2 = l;
-//				}
-//
-//				if (m % l == 0 && primeM1 == 1) {
-//					primeM1 = l;
-//
-//					int reps = 2;
-//					while (m % Math.pow(primeM1, reps) == 0) {
-//						reps++;
-//					}
-//					boundM = Math.max(boundM, m / (long) Math.pow(primeM1, reps - 1));
-//
-//				} else if (m % l == 0) {
-//					primeM2 = l;
-//				}
-//
-//				if (primeN2 != 1 && primeM1 == 1 && primeN2 * primeN1 < l) {
-//					return -1;
-//				} else if (primeM2 != 1 && primeN1 == 1 && primeM1 * primeM2 < l) {
-//					return 1;
-//				} else if (l > boundM && l > boundN) {
-//					break;
-//				}
-//			}
-//
-//			for (long i = knownPrimesLongs[knownPrimesLongs.length - 1] + 2; i <= boundN; i += 2) {
-//				if ((n % i) == 0) { // the first found factor must be prime
-//					if (primeN1 == 1) {
-//						primeN1 = i;
-//					} else { // the second found factor is a prime or a power of the first one
-//						if (i % primeN1 != 0) { // now we know it's a prime
-//							primeN2 = i;
-//							break;
-//						}
-//					}
-//				}
-//			}
-//
-//			// if we didn't find any prime factors, the number itself must be prime
-//			if (primeN1 == 1 && primeN2 == 1) {
-//				primeN1 = n;
-//			} else if (primeN2 == 1) { // if we have only one prime, the other one may be larger than the square root,
-//				// but only if it's not a power of the other prime
-//				long candidate = n / primeN1;
-//				while (candidate % primeN1 == 0) {
-//					candidate = candidate / primeN1;
-//				}
-//				primeN2 = candidate;
-//			}
-//			return 0;
-//		}
+
+				} else if (n % l == 0) {
+					primeN2 = l;
+				}
+
+				if (m % l == 0 && primeM1 == 1) {
+					primeM1 = l;
+
+					int reps = 2;
+					while (m % Math.pow(primeM1, reps) == 0) {
+						reps++;
+					}
+					boundM = Math.max(boundM, m / (long) Math.pow(primeM1, reps - 1));
+
+				} else if (m % l == 0) {
+					primeM2 = l;
+				}
+
+				if (primeN2 != 1 && primeM1 == 1 && primeN2 * primeN1 < l) {
+					return -1;
+				} else if (primeM2 != 1 && primeN1 == 1 && primeM1 * primeM2 < l) {
+					return 1;
+				} else if (l > boundM && l > boundN) {
+					break;
+				}
+			}
+
+			for (long i = knownPrimesLongs[knownPrimesLongs.length - 1] + 2; i <= boundN; i += 2) {
+				if ((n % i) == 0) { // the first found factor must be prime
+					if (primeN1 == 1) {
+						primeN1 = i;
+					} else { // the second found factor is a prime or a power of the first one
+						if (i % primeN1 != 0) { // now we know it's a prime
+							primeN2 = i;
+							break;
+						}
+					}
+				}
+			}
+
+			// if we didn't find any prime factors, the number itself must be prime
+			if (primeN1 == 1 && primeN2 == 1) {
+				primeN1 = n;
+			} else if (primeN2 == 1) { // if we have only one prime, the other one may be larger than the square root,
+				// but only if it's not a power of the other prime
+				long candidate = n / primeN1;
+				while (candidate % primeN1 == 0) {
+					candidate = candidate / primeN1;
+				}
+				primeN2 = candidate;
+			}
+			return 0;
+		}
+
+		private static long findSecondPrimeFactor(long n, long firstPrimeFactor, int index){
+			if (n == firstPrimeFactor){
+				return 1;
+			}
+
+			long boundDiv = firstPrimeFactor;
+			while (n % boundDiv == 0){
+				boundDiv = boundDiv * firstPrimeFactor;
+			}
+			long bound = n / boundDiv;
+
+			for(int i = index + 1; i < knownPrimesLongs.length && knownPrimesLongs[i] <= bound; i++){
+				if (n % knownPrimesLongs[i] == 0){
+					return knownPrimesLongs[i];
+				}
+			}
+
+			for (long i = knownPrimesLongs[knownPrimesLongs.length - 1] + 2; i <= bound; i+=2){
+				//If this number is not divisible by the first prime factor it is guaranteed to be prime
+				if (n % i == 0 && i % firstPrimeFactor != 0){
+					return i;
+				}
+			}
+
+			return 1;
+		}
+
+		//Returns the first prime factor of n if that factor is less than the bound, returns n otherwise
+		private static long findFirstPrimeFactor(long n, long bound){
+			for (long prime : knownPrimesLongs){
+				if (prime > bound){
+					return n;
+				} else if (n % prime == 0){
+					return prime;
+				}
+			}
+
+			for (long i = knownPrimesLongs[knownPrimesLongs.length - 1] + 2; i <= bound; i+=2){
+				if (n % i == 0){
+					return i;
+				}
+			}
+			return n;
+		}
 
 
 			// Takes a long number and returns the product of its up to two 
